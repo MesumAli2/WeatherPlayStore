@@ -9,20 +9,20 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatDrawableManager.get
 import androidx.core.app.ActivityCompat
-import androidx.core.view.isGone
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.mesum.weather.databinding.FragmentWeatherBinding
 import com.mesum.weather.model.WeatherNetworkModel
+import com.squareup.picasso.Picasso
 import org.json.JSONObject
 import java.io.IOException
+import java.lang.reflect.Array.get
 import java.util.*
 
 
@@ -91,7 +91,7 @@ ActivityCompat.requestPermissions(
                 Toast.makeText(activity, "Please Enter City", Toast.LENGTH_SHORT).show()
 
             }else{
-                cityName.text = cityName.toString()
+               cityName.text = cityName.toString()
                 getWeatherInfo(city)
             }
         }
@@ -129,11 +129,10 @@ ActivityCompat.requestPermissions(
             Request.Method.GET, url, null,
             {
                 loadingPB.visibility = View.GONE
-            homeRl.visibility =View.VISIBLE
+                homeRl.visibility =View.VISIBLE
                 weatherRvModelArray.clear()
-
-                var temp : String = it.getJSONObject("current").getString("temp_c")
-temperature.text = "$temp C"
+                val temp : String = it.getJSONObject("current").getString("temp_c")
+                temperature.text = "$temp C"
 
                 var isDay = it.getJSONObject("current").getInt("is_day")
                 var condition = it.getJSONObject("current").getJSONObject("condition").getString("text")
@@ -141,7 +140,20 @@ temperature.text = "$temp C"
                 var forecast = it.getJSONObject("forecast")
                 var forecasr0 = forecast.getJSONArray("forecastday").getJSONObject(0)
                 var hourarray = forecasr0.getJSONArray("hour")
+                binding.idIvicon.setImageURI(("http:$cdnicon").toUri())
 
+
+                for (i in 0 until hourarray.length()) {
+
+                    val hourObject: JSONObject = hourarray.getJSONObject(i)
+                    var time = hourObject.getString("time")
+                    var temp = hourObject.getString("temp_c")
+                   // var img = hourObject.getJSONObject("condition").getString( "ConditionXX")[2].toString()
+                    var wind = hourObject.getString("wind_kph")
+                    weatherRvModelArray.add( WeatherNetworkModel(time, temp, "", wind))
+
+                }
+                weatherRvAdapter.notifyDataSetChanged()
             }
         ) {
             Toast.makeText(activity, "Please enter valid city", Toast.LENGTH_SHORT).show()
