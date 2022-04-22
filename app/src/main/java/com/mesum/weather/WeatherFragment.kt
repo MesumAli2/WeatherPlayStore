@@ -91,7 +91,7 @@ ActivityCompat.requestPermissions(
                 Toast.makeText(activity, "Please Enter City", Toast.LENGTH_SHORT).show()
 
             }else{
-                cityName.text = cityNamen
+                cityName.text = cityName.toString()
                 getWeatherInfo(city)
             }
         }
@@ -134,7 +134,7 @@ ActivityCompat.requestPermissions(
 
                 var temp : String = it.getJSONObject("current").getString("temp_c")
 temperature.text = "$temp C"
-                
+
                 var isDay = it.getJSONObject("current").getInt("is_day")
                 var condition = it.getJSONObject("current").getJSONObject("condition").getString("text")
                 var cdnicon = it.getJSONObject("current").getJSONObject("condition").getString("icon")
