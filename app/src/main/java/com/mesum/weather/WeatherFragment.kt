@@ -5,7 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.location.Geocoder
-import android.location.LocationManager
+import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.android.volley.Request
@@ -26,10 +27,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.gms.location.*
 import com.mesum.weather.databinding.FragmentWeatherBinding
-import com.mesum.weather.model.WeatherNetworkModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.mesum.weather.model.*
 import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -45,9 +43,8 @@ class WeatherFragment : Fragment() {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient;
     private lateinit var cityName: TextView
     private var weatherRvModelArray : ArrayList<WeatherNetworkModel> = ArrayList<WeatherNetworkModel>()
-    private lateinit var locationManager : LocationManager
-    private var permissionCode = 1
-    private  var cityNamen: String = "Karachi"
+    private var weatherRvHourly : MutableList<Hour> = mutableListOf<Hour>()
+    private val viewModel : WeatherViewModel by activityViewModels<WeatherViewModel>()
 
 
 
@@ -74,11 +71,80 @@ class WeatherFragment : Fragment() {
         getLocationPermission()
 
         if (mLocationPermissionsGranted){
-            getLocation()
+          // getLocation()
         }
-            setupUIInteraction()
+          //  setupUIInteraction()
+            //setupUIInteraction()
+        viewModel.fetchResponse()
+        viewModel.weatherResponse.observe(viewLifecycleOwner){
+            if (it != null){
+                setUi(it)
+            }
+        }
 
     }
+
+    private fun setUi(it: ForecastModel) {
+        binding.cityName.text = it.location.name
+        binding.tempTextview.text = "${it.current.temp_c}°C"
+        binding.idIvicon.load( "http:" + it.current.condition.icon)
+        binding.idCondition.text = it.current.condition.text
+        weatherRvHourly.addAll(it.forecast.forecastday[0].hour)
+        setupRvAdapter(weatherRvHourly)
+        setBackGround(it.current.is_day)
+
+    }
+    class RvViewHolder(val view: View) : RecyclerView.ViewHolder(view){}
+
+    private fun setupRvAdapter(weatherRvHourly: MutableList<Hour>) {
+        val recyclerViewAdapter = object : RecyclerView.Adapter<RvViewHolder>(){
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvViewHolder {
+                return RvViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.weather_rv_item, parent, false))
+                }
+
+            override fun onBindViewHolder(holder: RvViewHolder, position: Int) {
+                val result = weatherRvHourly[position]
+                holder.itemView.findViewById<ImageView>(R.id.cdn).load("http:" + result.condition.icon)
+                val input = SimpleDateFormat("yyyy-MM-DD hh:mm")
+                val output = SimpleDateFormat("hh:mm")
+                val display =  input.parse(result.time)
+                holder.itemView.findViewById<TextView>(R.id.Time).text = output.format(display)
+                holder.itemView.findViewById<TextView>(R.id.temp).text = "${result.temp_c} °C"
+                holder.itemView.findViewById<TextView>(R.id.wind_speed).text = "${result.wind_kph} km/h"                }
+
+            override fun getItemCount(): Int {
+                    return weatherRvHourly.size
+            }
+
+        }
+        binding.RvWeather.adapter = recyclerViewAdapter
+    }
+
+
+    /* private fun setUpPlacesSearch() {
+
+         // Initialize the AutocompleteSupportFragment.
+         val autocompleteFragment =
+            childFragmentManager.findFragmentById(R.id.autocomplete_fragment)
+                     as AutocompleteSupportFragment
+
+         Places.initialize(context, )
+         // Specify the types of place data to return.
+         autocompleteFragment.setPlaceFields(listOf(Place.Field.ID, Place.Field.NAME))
+
+         // Set up a PlaceSelectionListener to handle the response.
+         autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+             override fun onPlaceSelected(place: Place) {
+                 Log.i(TAG, "Place: ${place.name}, ${place.id}")
+             }
+
+             override fun onError(p0: Status) {
+                 Log.d(TAG, "Fragment not started :  ${p0.toString()}")
+             }
+
+
+         })
+     }*/
 
 
     private fun setupUIInteraction() {
@@ -180,7 +246,6 @@ class WeatherFragment : Fragment() {
         }
 
     private fun setUpAdapter(weatherRvModelArray: ArrayList<WeatherNetworkModel>)  {
-        class RvViewHolder(val view: View) : RecyclerView.ViewHolder(view){}
         val adapter = object : RecyclerView.Adapter<RvViewHolder>(){
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvViewHolder {
                 return RvViewHolder(LayoutInflater.from(context).inflate(R.layout.weather_rv_item, parent, false))
@@ -256,29 +321,60 @@ class WeatherFragment : Fragment() {
     ) {
         Log.d(TAG, "Permission Request Called")
         mLocationPermissionsGranted = false
+
         when(requestCode){
             LOCATION_PERMISSION_CODE ->{
-                if (grantResults.size > 0 ){
-                    for ( i in grantResults){
-                        if (i != PackageManager.PERMISSION_GRANTED){
-                            Log.d(TAG, "Permission Failed")
-                            mLocationPermissionsGranted = false
-                            Toast.makeText(activity, "You need to provide location to \n get accurate weather updates", Toast.LENGTH_SHORT).show()
-                            return
-                        }
-                    }
-                    Log.d(TAG, "Permission granted")
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
                     mLocationPermissionsGranted = true
+                    if (ActivityCompat.checkSelfPermission(
+                            activity as AppCompatActivity,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                            activity as AppCompatActivity,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ) != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return
+                    }
+
+                    mFusedLocationClient.lastLocation.addOnCompleteListener { task ->
+                        val location : Location = task.result
+                        if (task.isSuccessful){
+                            if (location != null){
+                                Log.d("weatherFragment", location.longitude.toString())
+                                getWeatherInfo(getCityName(long = location.longitude, lat = location.latitude))
+                            }
+                        }
+
+                    }
+
+                }else {
+                    Toast.makeText(activity, "No permission habibe", Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, "Permission Failed")
+                    mLocationPermissionsGranted = false
+                    Toast.makeText(activity, "You need to provide location to \n get accurate weather updates", Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+
 
                 }
             }
         }
-    }
+
 
     private fun getLocation(){
         val mLocationRequest: LocationRequest = LocationRequest.create()
-        mLocationRequest.interval = 6000
-        mLocationRequest.fastestInterval = 5000
+        mLocationRequest.interval = 600000
+        mLocationRequest.fastestInterval = 10
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         val mLocationCallback: LocationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -302,8 +398,10 @@ class WeatherFragment : Fragment() {
         }
         try {
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null)
-            mFusedLocationClient.lastLocation.addOnSuccessListener {
-                Log.d(TAG, "Start Initial LastLocation is ${it.toString()}")
+            mFusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                getWeatherInfo(getCityName(long = location.longitude, lat = location.latitude))
+
+                //Log.d(TAG, "Start Initial LastLocation is ${it.toString()}")
         } }catch (e : SecurityException){
             Log.d(TAG, "Location not available ${e.message.toString()}")
         }

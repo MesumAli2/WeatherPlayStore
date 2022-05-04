@@ -1,7 +1,7 @@
 package com.mesum.weather.model
 
 data class Current(
-    val air_quality: AirQuality,
+    val air_quality: String = "ind",
     val cloud: Int,
     val condition: Condition,
     val feelslike_c: Double,
