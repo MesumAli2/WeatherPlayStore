@@ -23,6 +23,7 @@ class FirstFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private var _binding: FragmentFirstBinding? = null
+
     private val binding get() = _binding!!
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient

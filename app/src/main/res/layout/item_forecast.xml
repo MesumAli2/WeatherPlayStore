@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+<androidx.cardview.widget.CardView
+
+    android:id="@+id/card_main"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:elevation="16dp"
+    app:cardCornerRadius="16dp"
+    android:layout_height="wrap_content">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/main_contraint"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview_background_low"
+        android:layout_width="48dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="4dp"
+        app:cardBackgroundColor="@color/gray"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/curr_temp_low"
+            android:layout_width="42dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:text="12"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview_temp_high"
+        android:layout_width="48dp"
+        android:layout_height="40dp"
+        android:layout_margin="4dp"
+        app:cardBackgroundColor="@color/gray"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cardview_background_low"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/curr_temp_high"
+            android:layout_width="42dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:text="12"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/curr_day"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+android:fitsSystemWindows="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/poppins_medium"
+
+        android:text="Monday"
+        android:textColor="@color/gray"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/curr_item_statues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mtrl_ic_arrow_drop_down"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/weather_image"
+        app:layout_constraintStart_toEndOf="@+id/curr_day"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/black" />
+
+    <ImageView
+        android:id="@+id/weather_image"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toEndOf="@+id/curr_day"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cardview_temp_high"
+        app:layout_constraintStart_toEndOf="@+id/curr_day"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.cardview.widget.CardView>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_forecast"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/future_items"
+        android:orientation="horizontal"
+android:layout_below="@+id/card_main"
+        android:layout_height="wrap_content"/>
+</RelativeLayout>

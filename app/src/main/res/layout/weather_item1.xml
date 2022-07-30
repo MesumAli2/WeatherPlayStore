@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    layout_height=""
+    layout_width=""
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+
+        <TextView
+            android:id="@+id/Time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="time"
+            android:textAlignment="center"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/temp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Time"
+            android:gravity="center"
+            android:text="20"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/cdn"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_below="@id/temp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:padding="4dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/wind_speed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cdn"
+            android:layout_margin="4dp"
+            android:gravity="center"
+            android:padding="3dp"
+            android:text="13"
+            android:textAlignment="center"
+            android:textColor="@color/black" />
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

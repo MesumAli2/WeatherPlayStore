@@ -12,7 +12,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 private const val BASE_URL ="http://api.weatherapi.com/v1/"
-val url = "http://api.weatherapi.com/v1/forecast.json?key=eee62f028be24b1390a222114211209&q=Dubai&days=1&aqi=yes&alerts=yes\n"
 
 
     private val moshi = Moshi.Builder()
@@ -26,10 +25,11 @@ val url = "http://api.weatherapi.com/v1/forecast.json?key=eee62f028be24b1390a222
 
     interface WeatherInterface {
         @GET("forecast.json")
-        fun getWeather(@Query("key") key : String = "eee62f028be24b1390a222114211209", @Query("q") cityName: String, @Query("days") days: String = "1", @Query("aqi") aqi : String = "air_quality", @Query("alerts") alerts: String = "yes" ): Call<ForecastModel>
+        fun getWeather(@Query("key") key : String = "eee62f028be24b1390a222114211209", @Query("q") cityName: String, @Query("days") days: String = "10", @Query("aqi") aqi : String = "air_quality", @Query("alerts") alerts: String = "yes" ): Call<ForecastModel>
         @GET("")
        fun gunGetWeatherRP() : Call<ForecastModel>
     }
+
 
      object WeatherObject {
         val weatherRequest = retrofit.create(WeatherInterface::class.java)
