@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "276831141058",
+    "project_id": "weather-7cfe7",
+    "storage_bucket": "weather-7cfe7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276831141058:android:e83f385a1cee5342a18f5b",
+        "android_client_info": {
+          "package_name": "com.mesum.weather"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276831141058-thssih5sdetgc8a28jkob2ij7ibe1i4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsTvPijC77ldM_0tqoV1BYYzU15Ea0_Fk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276831141058-thssih5sdetgc8a28jkob2ij7ibe1i4l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
