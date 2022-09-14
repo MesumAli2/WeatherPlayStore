@@ -26,6 +26,10 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.mesum.weather.Database.CitysRepository
 import com.mesum.weather.Database.CitysRoomDatabase
 import com.mesum.weather.databinding.FragmentWeatherBinding
@@ -116,6 +120,22 @@ class WeatherFragment : Fragment() {
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            val msg = "Firebase token is $token"
+            Log.d(TAG, msg)
+            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+        })
         activity?.window?.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
       repository =  CitysRepository(CitysRoomDatabase.getDatabase(context = this.requireContext()).CitysDao())
