@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<LinearLayout
+<RelativeLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,28 +13,17 @@
 
 
 
-    <androidx.viewpager2.widget.ViewPager2
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="wrap_content"
+tools:listitem="@layout/weather_item"
         android:visibility="visible"
-        android:layout_weight="1"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tvImagesCount"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <me.relex.circleindicator.CircleIndicator3
 
-        android:id="@+id/tvImagesCount"
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_margin="4dp"
-        android:scrollIndicators="start"
-        android:layout_weight="0.2"
-        app:ci_drawable="@drawable/white_radius_circle_indicator"
-        app:ci_drawable_unselected="@drawable/black_circle_indicator"
-        android:translationZ="2dp"
-        android:layout_below="@+id/viewPager"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewPager" />
-</LinearLayout>
+
+</RelativeLayout>

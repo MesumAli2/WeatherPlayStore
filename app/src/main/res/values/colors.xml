@@ -11,4 +11,7 @@
     <color name="gray">#505050</color>
     <color name="lightGtay">#949494</color>
 
+    <color name="watercolor">#74ebd5</color>
+    <color name="watergradient">#CB3066</color>
+
 </resources>

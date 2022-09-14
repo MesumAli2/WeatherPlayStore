@@ -15,6 +15,10 @@
 
         >
 
+
+
+
+
         <TextView
             android:id="@+id/temp_future"
             android:layout_width="wrap_content"
@@ -25,14 +29,22 @@
             android:textColor="@color/black"
             android:textSize="20sp" />
 
+        <ImageView
+            android:id="@+id/icon_future"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/temp_future"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
         <TextView
             android:id="@+id/time_future"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
+
             android:padding="4dp"
             android:text="time"
-            android:layout_below="@id/temp_future"
+            android:layout_below="@id/icon_future"
             android:textAlignment="center"
             android:textColor="@color/black" />
 

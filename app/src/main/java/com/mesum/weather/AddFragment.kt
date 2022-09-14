@@ -54,21 +54,13 @@ class AddFragment : Fragment() {
         viewModel  = ViewModelProvider(this, WeatherViewModel.WeatherViewModelFactory(repository))
             .get(WeatherViewModel::class.java)
 
-       // viewModel.deleteAll()
 
-       // inputMethodManager?.showSoftInput(binding.search, 0)
-       // binding.search.setIconifiedByDefault(false)
         binding.search.requestFocus()
         (requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(
             InputMethodManager.SHOW_FORCED,
             InputMethodManager.HIDE_IMPLICIT_ONLY
         )
-        //inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-            /*  (activity?.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager?)?.showSoftInput(
-            view,
-            0
-        )*/
         // imm!!.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
         binding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -80,10 +72,8 @@ class AddFragment : Fragment() {
                 findNavController().navigate(R.id.weatherFragment, bundle)
                 return true
             }
-
             override fun onQueryTextChange(newText: String?): Boolean {
-              //  showInputMethod(view)
-               // viewModel.deleteAll()
+
                 return true
             }
 

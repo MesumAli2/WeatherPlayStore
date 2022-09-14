@@ -16,15 +16,15 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.13920898437500007" />
         <entry key="app/src/main/res/layout/fragment_add.xml" value="0.2701561840439004" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.22509057971014493" />
-        <entry key="app/src/main/res/layout/fragment_weather.xml" value="0.18518518518518517" />
+        <entry key="app/src/main/res/layout/fragment_weather.xml" value="0.1" />
         <entry key="app/src/main/res/layout/future_items.xml" value="0.2701561840439004" />
         <entry key="app/src/main/res/layout/item_category.xml" value="0.31875" />
         <entry key="app/src/main/res/layout/item_forecast.xml" value="0.2727272727272727" />
         <entry key="app/src/main/res/layout/rain_item.xml" value="0.21353556315104166" />
         <entry key="app/src/main/res/layout/rvforecast.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/weather_item.xml" value="0.2874847412109376" />
+        <entry key="app/src/main/res/layout/weather_item.xml" value="0.29034080653802896" />
         <entry key="app/src/main/res/layout/weather_item1.xml" value="0.40298507462686567" />
-        <entry key="app/src/main/res/layout/weather_rv_item.xml" value="0.6095413208007812" />
+        <entry key="app/src/main/res/layout/weather_rv_item.xml" value="0.4604651162790698" />
         <entry key="app/src/main/res/menu/menu_bottom_navigation_view.xml" value="0.31875" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1525" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1525" />

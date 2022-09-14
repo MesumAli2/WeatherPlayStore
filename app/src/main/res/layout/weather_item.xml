@@ -3,7 +3,7 @@
 
 <LinearLayout xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
@@ -29,15 +29,14 @@
             android:layout_height="wrap_content">
 
 
-
             <ImageView
                 android:id="@+id/back_ground_image"
-                android:scaleType="fitXY"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/nightt"
                 android:focusableInTouchMode="true"
 
-                android:background="@drawable/nightt"
+                android:scaleType="fitXY"
 
                 />
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -319,9 +318,6 @@
             </LinearLayout>
 
 
-
-
-
             <TextView
                 android:id="@+id/forecast_text"
                 android:layout_width="match_parent"
@@ -330,19 +326,36 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="-8dp"
                 android:text="Today's Weather Forecast"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/temp_forecast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/forecast_text"
+
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RvWeather"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/forecast_text"
+                android:layout_below="@+id/temp_forecast"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/weather_rv_item" />
+
+
+
+
+
 
 
             <TextView
@@ -374,6 +387,7 @@
                 android:layout_height="230dp"
                 android:visibility="visible"
                 android:layout_margin="8dp"
+                android:layout_marginTop="10dp"
                 android:layout_below="@id/rain_recyclerView"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
@@ -447,27 +461,23 @@
 
 
 
-
-
-
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/details"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:layout_below="@id/weatherForecast"
-                android:layout_marginTop="10dp"
                 android:layout_marginStart="8dp"
-                app:cardCornerRadius="18sp"
-                android:visibility="visible"
-                android:id="@+id/details"
+                android:layout_marginTop="2dp"
                 android:layout_marginEnd="8dp"
-                >
+                android:visibility="visible"
+                app:cardCornerRadius="18sp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/uv_humidll"
@@ -679,6 +689,9 @@
 
             </androidx.cardview.widget.CardView>
 
+
+
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
@@ -691,6 +704,12 @@
                 android:layout_marginEnd="8dp"
                 >
 
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
 
 
             </androidx.cardview.widget.CardView>
@@ -702,7 +721,8 @@
                 android:layout_height="150dp"
                 android:layout_below="@id/mapcard"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp" android:layout_marginTop="30dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="8dp"
                 app:cardUseCompatPadding="false" >

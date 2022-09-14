@@ -2,15 +2,15 @@ package com.mesum.weather
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.annotation.Nullable
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
@@ -20,12 +20,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import coil.load
 import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestBuilder
-import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.ImageViewTarget
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.mesum.weather.model.ForecastModel
 import com.mesum.weather.model.Forecastday
 import com.mesum.weather.model.Hour
@@ -33,22 +34,19 @@ import com.mesum.weather.model.WeatherViewModel
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 
-val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
-    override fun areItemsTheSame(oldItem: ForecastModel, newItem: ForecastModel): Boolean {
-        return oldItem == newItem
-    }
+    val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
+        override fun areItemsTheSame(oldItem: ForecastModel, newItem: ForecastModel): Boolean {
+            return oldItem == newItem
+        }
 
     override fun areContentsTheSame(oldItem: ForecastModel, newItem: ForecastModel): Boolean {
-        return oldItem.location == newItem.location
+        return oldItem.location.name == newItem.location.name
     }
 
 }
-class WeatherViewPager ( val viewPager: ViewPager2,val
-
-
-weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val viewLifecycleOwner : LifecycleOwner, val ctx : Context,
-                         val childFragmentManager: FragmentManager,val  activity: MainActivity, val findNanControlle: NavController
-) : ListAdapter<ForecastModel , WeatherViewPager.RvPagerViewHolder>(  diif ) {
+  class WeatherViewPager (val weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val ctx : Context,
+                             val childFragmentManager: FragmentManager,val  activity: MainActivity, val findNanControlle: NavController
+    ) : ListAdapter<ForecastModel , WeatherViewPager.RvPagerViewHolder>(  diif ) {
 
     private var weather =ArrayList<ForecastModel>()
   //  private lateinit var viewPager : ViewPager
@@ -71,7 +69,7 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
 
 
     private fun setUi(it: ForecastModel, binding: View) {
-
+        
         val recyclerViewAdapterforecasat = object : ListAdapter<Hour, WeatherFragment.RvViewHolder>(diif ){
 
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherFragment.RvViewHolder {
@@ -81,8 +79,11 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
             }
 
             override fun onBindViewHolder(holder: WeatherFragment.RvViewHolder, position: Int) {
+
                 val result = getItem(position)
+
                 holder.itemView.findViewById<ImageView>(R.id.cdn).load("http:" + result.condition.icon)
+
                 val input = SimpleDateFormat("yyyy-MM-DD hh:mm")
                 val output = SimpleDateFormat("h aa")
                 val display =  input.parse(result.time)
@@ -90,20 +91,12 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
                 holder.itemView.findViewById<TextView>(R.id.temp).text = "${trimLeadingZeros(result.temp_c)}°"
                 holder.itemView.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(result.wind_kph)} km/h"                }
 
-
-
         }
 
-
         setForecast(it.forecast.forecastday, binding)
-  //     var weatherRvHourly : MutableList<Hour> = mutableListOf()
         val weatherRvHourly = arrayListOf<Hour>()
         binding.findViewById<ImageView>(R.id.add_weathera).setOnClickListener {
-
             findNanControlle.navigate(R.id.addFragment)
-          //  findNanControlle().navigate(R.id.addFragment)
-            //  showInputMethod(view)
-
         }
 
         binding.findViewById<TextView>(R.id.temp_textview).setOnClickListener {
@@ -115,7 +108,7 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
         binding.findViewById<TextView>(R.id.text_up).text = "H:${trimLeadingZeros(it.forecast.forecastday[0].day.maxtemp_c)}°"
 
         binding.findViewById<TextView>(R.id.temp_textview).text = "${trimLeadingZeros(it.current.temp_c)}°"
-        binding.findViewById<ImageView>(R.id.id_ivicon).load( "http:" + it.current.condition.icon)
+      binding.findViewById<ImageView>(R.id.id_ivicon).load( "http:" + it.current.condition.icon)
         binding.findViewById<TextView>(R.id.id_condition).text = it.current.condition.text
         val timelist = mutableListOf<String>()
 
@@ -142,11 +135,13 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
         if (weatherRvHourly.size > 9){
             recyclerViewAdapterforecasat.submitList(weatherRvHourly)
 
+
         }else{
             weatherRvHourly.addAll(it.forecast.forecastday[1].hour)
             recyclerViewAdapterforecasat.submitList(weatherRvHourly)
 
         }
+        setGraph(it, binding, index)
 
         recyclerViewAdapterforecasat.notifyDataSetChanged()
         //  weatherRvHourly.addAll(it.forecast.forecastday[0].hour)
@@ -164,10 +159,10 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
 
 
         binding.findViewById<RecyclerView>(R.id.RvWeather).adapter = recyclerViewAdapterforecasat
-       setBackGround(it.current.is_day, binding, it.current.condition.text.toString())
+       setBackGround(it.current.is_day, binding, it.current.condition.text.toString(), it)
         Log.d("WeatherResponse", it.toString())
 
-      // setMap(it.location.lat, it.location.lon, it.current.is_day)
+     //  setMap(it.location.lat, it.location.lon, it.current.is_day, binding)
         binding.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(it.current.wind_kph)} kmh"
         binding.findViewById<TextView>(R.id.wind_direction).text = "${it.current.wind_dir.toString()} "
         binding.findViewById<TextView>(R.id.wind_degree).text = it.current.wind_degree.toString()
@@ -175,39 +170,146 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
 
 
 
+
+
+
     }
 
+    private fun setGraph(forecastModel: ForecastModel, binding: View, index: Int) {
 
-  /*  private fun setMap(lat: Double, lon: Double, isDay: Int) {
+        val mChart : LineChart = binding.findViewById(R.id.temp_forecast)
+        mChart.setBackgroundColor(Color.TRANSPARENT)
+        mChart.axisLeft.setDrawGridLines(false);
+        mChart.xAxis.setDrawGridLines(false);
+        mChart.setTouchEnabled(true);
+        mChart.setClickable(false);
+        mChart.isDoubleTapToZoomEnabled = false;
+        mChart.isDoubleTapToZoomEnabled = false;
+
+        mChart.setDrawBorders(false);
+        mChart.setDrawGridBackground(false);
+
+
+        mChart.description.isEnabled = false;
+        mChart.legend.isEnabled = false;
+
+        mChart.axisLeft.setDrawGridLines(false);
+        mChart.axisLeft.setDrawLabels(false);
+        mChart.axisLeft.setDrawAxisLine(false);
+
+        mChart.xAxis.setDrawGridLines(false);
+        mChart.xAxis.setDrawLabels(false);
+        mChart.xAxis.setDrawAxisLine(false);
+
+        mChart.axisRight.setDrawGridLines(false);
+        mChart.axisRight.setDrawLabels(false);
+        mChart.axisRight.setDrawAxisLine(false);
+        mChart.setDrawGridBackground(false)
+        mChart.setDrawBorders(false)
+        mChart.description.isEnabled = false
+        mChart.setPinchZoom(true)
+
+        val l : Legend  = mChart.legend
+        l.isEnabled = true
+        l.textColor = Color.WHITE
+
+        setData( forecastModel, mChart, index)
 
 
 
+    }
 
-       // val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        val mapFragment =         activity.supportFragmentManager.findFragmentById(R.id.map)as SupportMapFragment
-        mapFragment.getMapAsync(object : OnMapReadyCallback {
-            override fun onMapReady(map: GoogleMap?) {
-                if (isDay == 1){
-                    map?.setMapStyle(
-                        MapStyleOptions.loadRawResourceStyle(ctx, R.raw.styleday
-                    ))
+    private fun setData(
+        forecastData: ForecastModel,
+        mChart: LineChart,
+        index: Int
+    ) {
 
-                }else{
-                    map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(ctx, R.raw.styledark))
+        val arrayListY = arrayListOf<Entry>()
+        val data =forecastData.forecast.forecastday[0].hour
+
+
+        for ((c, i) in (index + 1 until data.size).withIndex()) {
+                if (c < 5){
+                    // trimLeadingZeros(data[i].temp_c).toFloat()
+                    arrayListY.add(Entry(c.toFloat(), trimLeadingZeros(data[i].temp_c).toFloat()))
 
                 }
-                val latlong : LatLng = LatLng(lat, lon)
-                //  map?.addMarker(MarkerOptions().position(latlong))
-                val cameraUpdateFactory =   CameraUpdateFactory.newLatLngZoom(
-                    latlong, 10f
-                )
-                map?.moveCamera(cameraUpdateFactory)
-            }
+        }
+        val mFillColor = Color.argb(150, 51, 181,229)
 
-        })
+
+        val lineDataset = LineDataSet(arrayListY, "Weather")
+        lineDataset.axisDependency = YAxis.AxisDependency.LEFT
+        lineDataset.color = mFillColor
+        lineDataset.setDrawCircles(true)
+        lineDataset.setDrawCircleHole(false)
+        lineDataset.lineWidth = 3f
+        lineDataset.fillAlpha = 255
+        lineDataset.setDrawFilled(false)
+        val lineData = LineData(lineDataset)
+
+        lineData.setDrawValues(true)
+        lineData.setValueTextColor(Color.WHITE)
+        lineData.setValueTextSize(12f)
+        mChart.data = lineData
+
+
 
     }
-*/
+
+
+    /* private fun setMap(lat: Double, lon: Double, isDay: Int, view: View) {
+
+         val mapView = view.findViewById<MapView>(R.id.mapView)
+         mapView.getMapAsync(object : OnMapReadyCallback{
+             override fun onMapReady(map: GoogleMap?) {
+                 if (isDay == 1){
+                     map?.setMapStyle(
+                         MapStyleOptions.loadRawResourceStyle(ctx, R.raw.styleday
+                         ))
+
+                 }else{
+                     map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(ctx, R.raw.styledark))
+
+                 }
+                 val latlong : LatLng = LatLng(lat, lon)
+                 //  map?.addMarker(MarkerOptions().position(latlong))
+                 val cameraUpdateFactory =   CameraUpdateFactory.newLatLngZoom(
+                     latlong, 10f
+                 )
+                 map?.moveCamera(cameraUpdateFactory)            }
+
+         })
+
+
+        // val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+        // val mapFragment =         activity.supportFragmentManager.findFragmentById(R.id.map)as SupportMapFragment
+
+
+             /* mapFragment.getMapAsync(object : OnMapReadyCallback {
+             override fun onMapReady(map: GoogleMap?) {
+                 if (isDay == 1){
+                     map?.setMapStyle(
+                         MapStyleOptions.loadRawResourceStyle(ctx, R.raw.styleday
+                     ))
+
+                 }else{
+                     map?.setMapStyle(MapStyleOptions.loadRawResourceStyle(ctx, R.raw.styledark))
+
+                 }
+                 val latlong : LatLng = LatLng(lat, lon)
+                 //  map?.addMarker(MarkerOptions().position(latlong))
+                 val cameraUpdateFactory =   CameraUpdateFactory.newLatLngZoom(
+                     latlong, 10f
+                 )
+                 map?.moveCamera(cameraUpdateFactory)
+             }
+
+         })*/
+
+     }*/
+
     fun trimLeadingZeros(source: Double): String {
         val price = source
         val format = DecimalFormat("0")
@@ -270,25 +372,33 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    private fun setBackGround(day: Int, binding: View, condition: String) {
+    private fun setBackGround(
+        day: Int,
+        binding: View,
+        condition: String,
+        it: ForecastModel
+    ) {
         if (day == 1){
 
             ///day
             if (condition.contains("rain")) {
                 //   Glide.with(ctx).load(R.drawable.livegif).asGif().diskCacheStrategy(DiskCacheStrategy.SOURCE).crossFade().into(binding.findViewById(R.id.back_ground_image));
-                Glide.with(binding).asGif().load(R.drawable.liverain).centerCrop()
-                    .apply(RequestOptions().override(500,1500))
+            /*    Glide.with(binding).asGif().load(R.drawable.raining)
+                    .into(binding.findViewById(R.id.id_ivicon))
+*/
 
+                Glide.with(binding).load(R.drawable.day4).fitCenter()
+                    .apply(RequestOptions().override(500,1500))
                     .into(binding.findViewById(R.id.back_ground_image))
             }
             else if (condition.contains("cloudy")){
-                Glide.with(binding).asGif().load(R.drawable.cloudy).centerCrop()
+                Glide.with(binding).load(R.drawable.day4).optionalCenterInside()
                     .apply(RequestOptions().override(500,1500))
-
                     .into(binding.findViewById(R.id.back_ground_image))
             }
 
             else{
+
                 Glide.with(binding).load(ctx.getDrawable(R.drawable.day4)).into(binding.findViewById(R.id.back_ground_image))
              //   binding.findViewById<ImageView>(R.id.back_ground_image).setImageDrawable(ctx.resources.getDrawable(R.drawable.day5))
             }
@@ -297,17 +407,21 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
 
                 //Night
             if (condition.contains("cloudy")) {
-                Glide.with(binding).asGif().load(R.drawable.cloudynight).centerCrop()
+                Glide.with(binding).load(R.drawable.nightt).centerCrop()
                     .apply(RequestOptions().override(500,1500))
 
                     .into(binding.findViewById(R.id.back_ground_image))
             }
             else if (condition.contains("rain")){
+              /*  Glide.with(binding).asGif().load(R.drawable.raining)
+                    .into(binding.findViewById(R.id.id_ivicon))
+*/
                 Glide.with(binding).asGif().load(R.drawable.rainnight).centerCrop()
                     .apply(RequestOptions().override(500,1500))
                     .into(binding.findViewById(R.id.back_ground_image))
             }
             else{
+
                 Glide.with(binding).load(ctx.getDrawable(R.drawable.nightt)).into(binding.findViewById(R.id.back_ground_image))
 
             }
@@ -369,6 +483,7 @@ weatherlist : ArrayList<ForecastModel>, val viewModel : WeatherViewModel, val vi
                         val display =  input.parse(result.time)
                         holder.itemView.findViewById<TextView>(R.id.time_future).text = output.format(display)
                         holder.itemView.findViewById<TextView>(R.id.temp_future).text = "${trimLeadingZeros(result.temp_c)}°"
+                        holder.itemView.findViewById<ImageView>(R.id.icon_future).load("http:" + result.condition.icon)
                     //    holder.itemView.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(result.wind_kph)} km/h"
                     }
 

@@ -2,10 +2,7 @@ package com.mesum.weather
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Application
 import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
@@ -13,18 +10,14 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import android.widget.TextView.OnEditorActionListener
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
@@ -33,24 +26,14 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
 import com.mesum.weather.Database.CitysRepository
 import com.mesum.weather.Database.CitysRoomDatabase
-
 import com.mesum.weather.databinding.FragmentWeatherBinding
 import com.mesum.weather.model.*
-import me.relex.circleindicator.CircleIndicator
-import org.w3c.dom.Text
 import java.io.IOException
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.zip.Inflater
 
 
 class WeatherFragment : Fragment() {
@@ -179,6 +162,8 @@ class WeatherFragment : Fragment() {
             for (i in it){
                 if (!arraytemp.isNullOrEmpty()){
                     for (a in arraytemp){
+                        //if city dose not exist in array then fetch for the reponse
+
                         if (a.location.name != i.cityName){
                             viewModel.fetchResponse(i.cityName.toString())
 
@@ -196,65 +181,44 @@ class WeatherFragment : Fragment() {
              var firstime = false
             if (it != null){
 
-             /*   mFusedLocationClient.lastLocation.addOnCompleteListener {task ->
-
-                    val location : Location? = task.result
-                    if (task.isSuccessful){
-
-                        if (location != null){
-                            if (it.location.name == getCityName(long = location.longitude, lat = location.longitude)){
-                                Log.d("LocationExists", "User current location exists")
-                                arraytemp.set(0, it)
-                                firstime = true
-                                viewpager.setCurrentItem(0)
-                            }
-
-                        }
-
-                    }
-                }*/
-
-
-              //  binding.mapcard.visibility = View.VISIBLE
-               // viewModel.fetchFutureResponse(it.location.lat, it.location.lon)
                 Log.d("LatLongLog", "${it.location.lat}, ${it.location.lon}")
-            //    setUi(it)
-               // val diff = arraytemp.filterNot {  }
 
                if (!arraytemp.contains(it)){
                    if (it.location.name == cityNameLocation){
                        arraytemp.add(0, it)
                    }else{
+
                        arraytemp.add(it)
 
                    }
-
-
-
                }
-               // arraytemp.add(it)
+
+                val distinc = arraytemp.distinct()
+                weatherViewPager = WeatherViewPager(weatherlist = arraytemp, viewModel = viewModel, ctx = requireContext(), childFragmentManager = childFragmentManager , activity =  activity as MainActivity, findNanControlle = findNavController())
+                weatherViewPager.submitList(distinc)
+                viewpager.smoothScrollBy(10,10)
 
 
-
-                  // weatherViewPager!!.addWeather(arraytemp)
-                if (!arraytemp.isNullOrEmpty()){
-
-                }
-
-                weatherViewPager = WeatherViewPager(weatherlist = arraytemp, viewPager = viewpager, viewModel = viewModel, viewLifecycleOwner = viewLifecycleOwner, ctx = requireContext(), childFragmentManager = childFragmentManager , activity =  activity as MainActivity, findNanControlle = findNavController())
-                weatherViewPager.submitList(arraytemp)
                 weatherViewPager.notifyDataSetChanged()
                 viewpager.setAdapter(weatherViewPager)
+               // viewpager.setLayoutManager(ViewPagerLayoutManager);
+              //  val snapHelper = GravitySnapHelper(Gravity.START)
+             //   snapHelper.attachToRecyclerView(viewpager)
+
                 if (arguments?.getBoolean("Added") == true){
-                    viewpager.setCurrentItem(arraytemp.size - 1 , true)
-                    3
+                    viewpager.scrollToPosition(distinc.size - 1  )
 
                 }
+                viewpager.removeItemDecoration(CirclePagerIndicatorDecoration())
 
-                val indicator = binding.tvImagesCount
-                indicator.setViewPager(viewpager)
-                weatherViewPager.registerAdapterDataObserver(indicator.getAdapterDataObserver());
+                viewpager.addItemDecoration(CirclePagerIndicatorDecoration())
+              //  val indicator = binding.indicator
+                    //  indicator.setViewPager(viewpager)
+               // weatherViewPager.registerAdapterDataObserver(indicator.getAdapterDataObserver());
 
+               // val recyclerIndicator: ScrollingPagerIndicator = binding.indicator
+               // recyclerIndicator.attachToRecyclerView(recyclerView)
+              //  recyclerIndicator.add(viewpager)
             //    weatherViewPager = this.context?.let { it1 -> WeatherViewPager(it1, arraytemp) }
                 Log.d("WeatherResponse", arraytemp.toString())
 

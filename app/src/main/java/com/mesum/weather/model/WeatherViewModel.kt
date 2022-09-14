@@ -68,6 +68,23 @@ class WeatherViewModel(val repository: CitysRepository) : ViewModel() {
 
         })
     }
+    init {
+        getLocation()
+    }
+    fun getLocation(){
+        val lp = WeatherObject.weatherRequest.getLocationResult()
+        lp.enqueue(object : Callback<List<SearchDataClass>>{
+            override fun onResponse(call: Call<List<SearchDataClass>>, response: Response<List<SearchDataClass>>) {
+                Log.d("LocationLookUpResponse", response.body().toString())
+            }
+
+            override fun onFailure(call: Call<List<SearchDataClass>>, t: Throwable) {
+                Log.d("LocationLookUpResponse", "Location Error is  : " +t.message.toString())
+
+            }
+
+        })
+    }
 
 
 
