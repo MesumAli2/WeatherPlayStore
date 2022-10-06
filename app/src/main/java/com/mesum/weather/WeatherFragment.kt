@@ -310,10 +310,12 @@ class WeatherFragment : Fragment() {
                 rvAdapter.submitList(listInterval)
                 binding.rvForecast.adapter = rvAdapter
 
-
+                binding.rvForecast
             }
 
         }*/
+
+    */
 
       /*  if (!listInterval.isNullOrEmpty()){
             binding.weatherForecast.visibility = View.VISIBLE
