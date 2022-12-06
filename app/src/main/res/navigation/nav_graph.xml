@@ -14,14 +14,15 @@
             android:id="@+id/action_weatherFragment_to_addFragment"
             app:destination="@id/addFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/firstFragment"
-        android:name="com.mesum.weather.FirstFragment"
-        android:label="fragment_first"
-        tools:layout="@layout/fragment_first" />
+
     <fragment
         android:id="@+id/addFragment"
         android:name="com.mesum.weather.AddFragment"
         android:label="fragment_add"
         tools:layout="@layout/fragment_add" />
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.mesum.weather.favourites.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" />
 </navigation>

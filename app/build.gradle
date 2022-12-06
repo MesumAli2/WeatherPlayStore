@@ -14,8 +14,8 @@ android {
     defaultConfig {
         applicationId "com.mesum.weather"
         minSdk 21
-        targetSdk 32
-        versionCode 16
+        targetSdk 33
+        versionCode 18
 
 
         versionName "1.0"
@@ -38,6 +38,15 @@ android {
     }
     buildFeatures{
         viewBinding = true
+    }
+    flavorDimensions 'env'
+    productFlavors {
+        staging {
+            dimension 'env'
+        }
+        production {
+            dimension 'env'
+        }
     }
 }
 

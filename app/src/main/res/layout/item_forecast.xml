@@ -75,10 +75,11 @@
         android:id="@+id/curr_day"
         android:layout_width="110dp"
         android:layout_height="wrap_content"
+
 android:fitsSystemWindows="true"
         android:layout_alignParentLeft="true"
         android:layout_marginStart="8dp"
-        android:fontFamily="@font/poppins_medium"
+        android:fontFamily="@font/poppins_light"
 
         android:text="Monday"
         android:textColor="@color/gray"

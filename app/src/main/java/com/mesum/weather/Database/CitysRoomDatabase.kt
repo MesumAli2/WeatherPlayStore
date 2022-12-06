@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Citys::class], version = 1 , exportSchema = false)
+@Database(entities = [Citys::class], version = 4 , exportSchema = false)
   abstract class CitysRoomDatabase : RoomDatabase(){
     abstract fun CitysDao(): CitysDao
     companion object{
@@ -18,7 +18,8 @@ import androidx.room.RoomDatabase
                     context.applicationContext,
                     CitysRoomDatabase::class.java,
                     "citys_database"
-                ).build()
+                ).fallbackToDestructiveMigration()
+                    .build()
 
                 INSTANCE = instance
                 //return instance

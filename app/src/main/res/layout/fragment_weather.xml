@@ -11,18 +11,15 @@
     >
 
 
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:orientation="vertical"
         android:layout_height="wrap_content"
-tools:listitem="@layout/weather_item"
+        android:orientation="horizontal"
         android:visibility="visible"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/weather_item" />
 
 
 
