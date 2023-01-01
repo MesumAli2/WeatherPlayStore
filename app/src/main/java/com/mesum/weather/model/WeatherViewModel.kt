@@ -6,18 +6,21 @@ import androidx.lifecycle.*
 import com.mesum.weather.Database.Citys
 import com.mesum.weather.Database.CitysRepository
 import com.mesum.weather.Database.CitysRoomDatabase
-import com.mesum.weather.forecastModel.Interval
-import com.mesum.weather.forecastModel.NewForeccast
+import com.mesum.weather.model.forecastModel.Interval
+import com.mesum.weather.model.forecastModel.NewForeccast
 import com.mesum.weather.network.WeatherForecastObject
 import com.mesum.weather.network.WeatherObject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.lang.IllegalArgumentException
 import java.lang.StringBuilder
+import javax.inject.Inject
 
-class WeatherViewModel(val repository: CitysRepository) : ViewModel() {
+@HiltViewModel
+class WeatherViewModel @Inject constructor(val repository: CitysRepository) : ViewModel() {
      val weatherResponse : MutableLiveData<ForecastModel> = MutableLiveData<ForecastModel>()
     var futureWeatherResponse : MutableLiveData<NewForeccast> = MutableLiveData<NewForeccast>()
 

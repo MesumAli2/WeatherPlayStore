@@ -3,8 +3,9 @@ package com.mesum.weather.Database
 import androidx.annotation.WorkerThread
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class CitysRepository(private val dao: CitysDao ) {
+class CitysRepository @Inject constructor(private val dao: CitysDao ) {
 
 
 

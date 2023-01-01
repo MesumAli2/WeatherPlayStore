@@ -1,7 +1,7 @@
 package com.mesum.weather.network
 
 import androidx.lifecycle.LiveData
-import com.mesum.weather.forecastModel.NewForeccast
+import com.mesum.weather.model.forecastModel.NewForeccast
 import com.mesum.weather.model.ForecastModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

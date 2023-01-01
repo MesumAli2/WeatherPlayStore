@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/weatherFragment"
-        android:name="com.mesum.weather.WeatherFragment"
+        android:name="com.mesum.weather.ui.main.WeatherFragment"
         android:label="fragment_weather"
         tools:layout="@layout/fragment_weather" >
         <action
@@ -17,12 +17,12 @@
 
     <fragment
         android:id="@+id/addFragment"
-        android:name="com.mesum.weather.AddFragment"
+        android:name="com.mesum.weather.ui.add.AddFragment"
         android:label="fragment_add"
         tools:layout="@layout/fragment_add" />
     <fragment
         android:id="@+id/favouriteFragment"
-        android:name="com.mesum.weather.favourites.FavouriteFragment"
+        android:name="com.mesum.weather.ui.favourites.FavouriteFragment"
         android:label="fragment_favourite"
         tools:layout="@layout/fragment_favourite" />
 </navigation>
