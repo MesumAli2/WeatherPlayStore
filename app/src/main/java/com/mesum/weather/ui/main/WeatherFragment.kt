@@ -91,7 +91,7 @@ class WeatherFragment : Fragment(), FavouriteInterface {
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sharedPref = requireActivity()?.getPreferences(Context.MODE_PRIVATE)
+        sharedPref = requireActivity()?.getPreferences(Context.MODE_PRIVATE)!!
         val tempCelsius = sharedPref.getString(getString(R.string.celsius), "")
         val tempFahrenheit = sharedPref.getString(getString(R.string.fahrenheit), "")
         if (!tempCelsius.isNullOrEmpty()){
@@ -567,13 +567,15 @@ class WeatherFragment : Fragment(), FavouriteInterface {
            val gcd = Geocoder(activity as AppCompatActivity, Locale.getDefault())
            try {
                val address = gcd.getFromLocation(lat, long, 10)
-               for (i in address){
-                   if (i != null){
-                       val city = i.locality
-                       if (city!=null && !city.equals("")){
-                           cityName = city
-                       }else{
-                           Log.e("TAG", "city not found")
+               if (address != null) {
+                   for (i in address){
+                       if (i != null){
+                           val city = i.locality
+                           if (city!=null && !city.equals("")){
+                               cityName = city
+                           }else{
+                               Log.e("TAG", "city not found")
+                           }
                        }
                    }
                }
