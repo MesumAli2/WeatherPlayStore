@@ -3,7 +3,6 @@ package com.mesum.weather.ui.main.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
@@ -11,13 +10,38 @@ import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
+import coil.compose.AsyncImage
 import coil.load
+import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.github.mikephil.charting.charts.LineChart
@@ -85,29 +109,24 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
 
         if (tempvalue == ctx.getString(R.string.celsius)){
-        val recyclerViewAdapterforecasat = object : ListAdapter<Hour, WeatherFragment.RvViewHolder>(diif ){
+        val recyclerViewAdapterforecasat = object : ListAdapter<Hour,ForecastVH>(diif ){
 
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherFragment.RvViewHolder {
-                return WeatherFragment.RvViewHolder(
-                    LayoutInflater.from(parent.context).inflate(R.layout.weather_rv_item, parent, false)
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ForecastVH {
+                return ForecastVH(
+                    ComposeView(parent.context)
                 )
             }
 
 
 
 
-            override fun onBindViewHolder(holder: WeatherFragment.RvViewHolder, position: Int) {
+            override fun onBindViewHolder(holder: ForecastVH, position: Int) {
 
                 val result = getItem(position)
 
-                holder.itemView.findViewById<ImageView>(R.id.cdn).load("http:" + result.condition.icon)
+                holder.bind(result)
 
-                val input = SimpleDateFormat("yyyy-MM-DD hh:mm")
-                val output = SimpleDateFormat("h aa")
-                val display =  input.parse(result.time)
-                holder.itemView.findViewById<TextView>(R.id.timenow).text = output.format(display)
-                holder.itemView.findViewById<TextView>(R.id.temp).text = "${trimLeadingZeros(result.temp_c)}°"
-                holder.itemView.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(result.wind_kph)} km/h"
+//
             }
 
         }
@@ -241,7 +260,8 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
                 override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherFragment.RvViewHolder {
                     return WeatherFragment.RvViewHolder(
-                        LayoutInflater.from(parent.context).inflate(R.layout.weather_rv_item, parent, false)
+                        ComposeView(parent.context)
+
                     )
                 }
 
@@ -394,10 +414,81 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
     }
 
-    private fun setGraph(forecastModel: ForecastModel, binding: View, index: Int) {
+      class ForecastVH(val composeView: ComposeView): RecyclerView.ViewHolder(composeView.rootView){
+          fun bind(result: Hour) {
+              composeView.setContent {
+
+                  // SimpleDateFormat initialization
+                  val input = SimpleDateFormat("yyyy-MM-dd HH:mm") // Use capital 'H' for 24-hour format
+                  val output = SimpleDateFormat("h aa")
+
+                  val display = input.parse(result.time)
+                  Log.d("ResultLog", result.toString())
+
+                  Card(
+                      modifier = Modifier
+                          .width(70.dp)
+                          .height(180.dp)
+                          .padding(4.dp)
+                          .padding(start = 5.dp, end = 5.dp),
+                      shape = RoundedCornerShape(10.dp)
+                  ) {
+                      Column(
+                          modifier = Modifier.fillMaxSize(),
+                          horizontalAlignment = Alignment.CenterHorizontally
+                      ) {
+                          Text(
+                              text = output.format(display),
+                              textAlign = TextAlign.Center,
+                              modifier = Modifier.padding(4.dp)
+                          )
+
+
+                          AsyncImage(
+                              model = ImageRequest.Builder(context = LocalContext.current)
+                                  .data(result.condition.icon)
+                                  .crossfade(true)
+                                  .build(),
+                              modifier = Modifier.fillMaxWidth().height(20.dp)
+                              ,
+                              contentDescription = "",
+                          )
+                          Text(text ="${result?.temp_c?.let { trimLeadingZeros(it) }}°",
+                              color = androidx.compose.ui.graphics.Color.Black,
+                              textAlign = TextAlign.Center,
+                              modifier = Modifier.padding(4.dp)
+                          )
+
+                          Text(
+                              text = "${trimLeadingZeros(result.wind_kph)} km/h",
+                              style = MaterialTheme.typography.bodyLarge,
+                              color = androidx.compose.ui.graphics.Color.Black,
+                              textAlign = TextAlign.Center,
+                              modifier = Modifier.padding(4.dp)
+                          )
+                      }
+                  }
+              }
+
+
+          }
+
+          fun trimLeadingZeros(source: Double): String {
+              val price = source
+              val format = DecimalFormat("0")
+              return format.format(price)
+
+          }
+      }
+
+
+
+
+
+      private fun setGraph(forecastModel: ForecastModel, binding: View, index: Int) {
 
         val mChart : LineChart = binding.findViewById(R.id.temp_forecast)
-        mChart.setBackgroundColor(Color.TRANSPARENT)
+        mChart.setBackgroundColor(android.graphics.Color.TRANSPARENT)
         mChart.axisLeft.setDrawGridLines(false);
         mChart.xAxis.setDrawGridLines(false);
         mChart.setTouchEnabled(true);
@@ -430,7 +521,7 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
         val l : Legend  = mChart.legend
         l.isEnabled = true
-        l.textColor = Color.WHITE
+        l.textColor = android.graphics.Color.WHITE
 
         setData( forecastModel, mChart, index)
 
@@ -455,7 +546,7 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
                 }
         }
-        val mFillColor = Color.argb(150, 51, 181,229)
+        val mFillColor = android.graphics.Color.argb(150, 51, 181,229)
 
 
         val lineDataset = LineDataSet(arrayListY, "Weather")
@@ -469,7 +560,7 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
         val lineData = LineData(lineDataset)
 
         lineData.setDrawValues(true)
-        lineData.setValueTextColor(Color.WHITE)
+        lineData.setValueTextColor(android.graphics.Color.WHITE)
         lineData.setValueTextSize(12f)
         mChart.data = lineData
 
