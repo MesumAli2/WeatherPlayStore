@@ -372,6 +372,7 @@
                 android:layout_marginEnd="15dp"
                 />
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/RvWeather"
                 android:layout_width="match_parent"

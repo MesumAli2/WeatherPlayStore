@@ -11,6 +11,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.DiffUtil
@@ -435,33 +437,39 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
                   ) {
                       Column(
                           modifier = Modifier.fillMaxSize(),
-                          horizontalAlignment = Alignment.CenterHorizontally
+                          horizontalAlignment = Alignment.CenterHorizontally,
+                          verticalArrangement = Arrangement.Center
                       ) {
                           Text(
                               text = output.format(display),
                               textAlign = TextAlign.Center,
                               modifier = Modifier.padding(4.dp)
+                          ,
+                              fontSize = 12.sp
                           )
 
 
                           AsyncImage(
                               model = ImageRequest.Builder(context = LocalContext.current)
-                                  .data(result.condition.icon)
+                                  .data("http:" +result.condition.icon)
                                   .crossfade(true)
                                   .build(),
-                              modifier = Modifier.fillMaxWidth().height(20.dp)
+                              modifier = Modifier.fillMaxWidth().height(80.dp)
                               ,
                               contentDescription = "",
                           )
                           Text(text ="${result?.temp_c?.let { trimLeadingZeros(it) }}°",
                               color = androidx.compose.ui.graphics.Color.Black,
                               textAlign = TextAlign.Center,
-                              modifier = Modifier.padding(4.dp)
+                              modifier = Modifier.padding(4.dp),
+                              fontSize = 12.sp
                           )
 
                           Text(
                               text = "${trimLeadingZeros(result.wind_kph)} km/h",
                               style = MaterialTheme.typography.bodyLarge,
+                              fontSize = 11.sp
+                              ,
                               color = androidx.compose.ui.graphics.Color.Black,
                               textAlign = TextAlign.Center,
                               modifier = Modifier.padding(4.dp)
