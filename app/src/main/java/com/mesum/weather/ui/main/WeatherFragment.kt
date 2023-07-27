@@ -57,7 +57,7 @@ class WeatherFragment : Fragment(), FavouriteInterface {
     var searchstate = false
     private lateinit var repository : CitysRepository
     private  val viewModel : WeatherViewModel by viewModels()
-    private lateinit var weatherViewPager : WeatherRv
+    private lateinit var weatherRv : WeatherRv
     private var cityNameLocation : String? = null
     private var weatherClick : FavouriteInterface? = null
     lateinit var sharedPref : SharedPreferences
@@ -195,7 +195,7 @@ class WeatherFragment : Fragment(), FavouriteInterface {
                }
 
                 val distinc = arraytemp.distinct()
-                weatherViewPager = WeatherRv(weatherlist = arraytemp.distinct(), viewModel = viewModel, ctx = requireContext(), childFragmentManager = childFragmentManager , activity =  activity as MainActivity, findNanControlle = findNavController(), callback = object :
+                weatherRv = WeatherRv(weatherlist = arraytemp.distinct(), viewModel = viewModel, ctx = requireContext(), childFragmentManager = childFragmentManager , activity =  activity as MainActivity, findNanControlle = findNavController(), callback = object :
                     FavouriteInterface {
                     override fun favClicked(cityName: String) {
                         Toast.makeText(context, "$cityName added to favourite", Toast.LENGTH_SHORT).show()
@@ -205,12 +205,12 @@ class WeatherFragment : Fragment(), FavouriteInterface {
                     }
 
                 }, sharedPref, tempvalue)
-                weatherViewPager.submitList(distinc)
+                weatherRv.submitList(distinc)
               //  rvMain.smoothScrollBy(10,10)
 
 
-                weatherViewPager.notifyDataSetChanged()
-                rvMain.setAdapter(weatherViewPager)
+                weatherRv.notifyDataSetChanged()
+                rvMain.setAdapter(weatherRv)
                 rvMain.setLayoutManager(
                     ViewPagerLayoutManager(
                         getActivity(),

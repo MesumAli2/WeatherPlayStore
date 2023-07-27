@@ -9,10 +9,11 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,21 +21,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.recyclerview.widget.DiffUtil
@@ -54,6 +59,9 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.mesum.weather.MainActivity
 import com.mesum.weather.R
+import com.mesum.weather.model.Astro
+import com.mesum.weather.model.ConditionX
+import com.mesum.weather.model.Day
 import com.mesum.weather.ui.favourites.FavouriteInterface
 import com.mesum.weather.model.ForecastModel
 import com.mesum.weather.model.Forecastday
@@ -62,6 +70,7 @@ import com.mesum.weather.model.WeatherViewModel
 import com.mesum.weather.ui.main.WeatherFragment
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
+import kotlin.random.Random
 
 
 val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
@@ -454,7 +463,9 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
                                   .data("http:" +result.condition.icon)
                                   .crossfade(true)
                                   .build(),
-                              modifier = Modifier.fillMaxWidth().height(80.dp)
+                              modifier = Modifier
+                                  .fillMaxWidth()
+                                  .height(80.dp)
                               ,
                               contentDescription = "",
                           )
@@ -763,57 +774,57 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
     private fun setForecast(forecastday: List<Forecastday>, binding: View) {
     //    val listInterval = mutableListOf<Forecastday>()
-        val rvAdapter = object : ListAdapter<Forecastday, WeatherFragment.RvViewHolder>(diif2 ){
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherFragment.RvViewHolder {
-                return WeatherFragment.RvViewHolder(
-                    LayoutInflater.from(parent.context)
-                        .inflate(R.layout.item_forecast, parent, false)
-                )
+        val rvAdapter = object : ListAdapter<Forecastday, Forecast2DayVH>(diif2 ){
+            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Forecast2DayVH {
+                return Forecast2DayVH(composeView = ComposeView(parent.context))
+
+
             }
-            override fun onBindViewHolder(holder: WeatherFragment.RvViewHolder, position: Int) {
+            override fun onBindViewHolder(holder: Forecast2DayVH, position: Int) {
                 var forecastDays = true
                 val result = getItem(position)
                 val input = SimpleDateFormat( "yyyy-MM-dd")
                 val output = SimpleDateFormat("EEEE")
                 val display =  input.parse(result.date.toString())
-                holder.itemView.findViewById<TextView>(R.id.curr_day).text = output.format(display)
-                // result.day.condition.
-                //   holder.itemView.findViewById<TextView>(R.id.curr_day).text = result.date.toString()
-                //holder.itemView.findViewById<TextView>(R.id.curr_day).text = result.startTime
-//                holder.itemView.findViewById<TextView>(R.id.time).text = output.format(display)
+                holder.bind(result = result)
+//                holder.itemView.findViewById<TextView>(R.id.curr_day).text = output.format(display)
+//                // result.day.condition.
+//                //   holder.itemView.findViewById<TextView>(R.id.curr_day).text = result.date.toString()
+//                //holder.itemView.findViewById<TextView>(R.id.curr_day).text = result.startTime
+////                holder.itemView.findViewById<TextView>(R.id.time).text = output.format(display)
+//
+//                holder.itemView.findViewById<TextView>(R.id.curr_temp_low).text = "${trimLeadingZeros(result.day.mintemp_c)}°"
+//                holder.itemView.findViewById<TextView>(R.id.curr_temp_high).text = "${trimLeadingZeros(result.day.maxtemp_c)}°"
+//                holder.itemView.findViewById<ImageView>(R.id.weather_image).load("http:" + result.day.condition.icon)
+//                val rvFutureForecastAdapter = object : ListAdapter<Hour, WeatherFragment.RvViewHolder>(diif ){
+//
+//                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherFragment.RvViewHolder {
+//                        return WeatherFragment.RvViewHolder(
+//                            LayoutInflater.from(parent.context).inflate(R.layout.future_items, parent, false)
+//                        )
+//                    }
+//
+//                    override fun onBindViewHolder(holder: WeatherFragment.RvViewHolder, position: Int) {
+//                        val result = getItem(position)
+////                        holder.itemView.findViewById<ImageView>(R.id.cdn).load("http:" + result.condition.icon)
+//                        val input = SimpleDateFormat("yyyy-MM-DD hh:mm")
+//                        val output = SimpleDateFormat("h aa")
+//                        val display =  input.parse(result.time)
+//                        holder.itemView.findViewById<TextView>(R.id.time_future).text = output.format(display)
+//                        holder.itemView.findViewById<TextView>(R.id.temp_future).text = "${trimLeadingZeros(result.temp_c)}°"
+//                        holder.itemView.findViewById<ImageView>(R.id.icon_future).load("http:" + result.condition.icon)
+//                    //    holder.itemView.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(result.wind_kph)} km/h"
+//                    }
 
-                holder.itemView.findViewById<TextView>(R.id.curr_temp_low).text = "${trimLeadingZeros(result.day.mintemp_c)}°"
-                holder.itemView.findViewById<TextView>(R.id.curr_temp_high).text = "${trimLeadingZeros(result.day.maxtemp_c)}°"
-                holder.itemView.findViewById<ImageView>(R.id.weather_image).load("http:" + result.day.condition.icon)
-                val rvFutureForecastAdapter = object : ListAdapter<Hour, WeatherFragment.RvViewHolder>(diif ){
-
-                    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherFragment.RvViewHolder {
-                        return WeatherFragment.RvViewHolder(
-                            LayoutInflater.from(parent.context).inflate(R.layout.future_items, parent, false)
-                        )
-                    }
-
-                    override fun onBindViewHolder(holder: WeatherFragment.RvViewHolder, position: Int) {
-                        val result = getItem(position)
-//                        holder.itemView.findViewById<ImageView>(R.id.cdn).load("http:" + result.condition.icon)
-                        val input = SimpleDateFormat("yyyy-MM-DD hh:mm")
-                        val output = SimpleDateFormat("h aa")
-                        val display =  input.parse(result.time)
-                        holder.itemView.findViewById<TextView>(R.id.time_future).text = output.format(display)
-                        holder.itemView.findViewById<TextView>(R.id.temp_future).text = "${trimLeadingZeros(result.temp_c)}°"
-                        holder.itemView.findViewById<ImageView>(R.id.icon_future).load("http:" + result.condition.icon)
-                    //    holder.itemView.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(result.wind_kph)} km/h"
-                    }
 
 
 
-                }
                 holder.itemView.setOnClickListener {
                     if (forecastDays){
                         holder.itemView.findViewById<RecyclerView>(R.id.recycler_forecast).visibility = View.VISIBLE
-                        rvFutureForecastAdapter.submitList(forecastday[position].hour)
+                 //       rvFutureForecastAdapter.submitList(forecastday[position].hour)
                       //  Toast.makeText(ctx, forecastday[position].hour.toString(), Toast.LENGTH_LONG).show()
-                        holder.itemView.findViewById<RecyclerView>(R.id.recycler_forecast).adapter = rvFutureForecastAdapter
+                //        holder.itemView.findViewById<RecyclerView>(R.id.recycler_forecast).adapter = rvFutureForecastAdapter
                         holder.itemView.findViewById<ImageView>(R.id.curr_item_statues).setImageDrawable(ctx.resources.getDrawable(
                             me.relex.circleindicator.R.drawable.mtrl_ic_arrow_drop_up))
 
@@ -832,7 +843,7 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
                 }
             }
         }
-        binding.findViewById<CardView>(R.id.weatherForecast).visibility = View.VISIBLE
+      //  binding.findViewById<CardView>(R.id.weatherForecast).visibility = View.VISIBLE
        // binding.weatherForecast.visibility = View.VISIBLE
 
         rvAdapter.submitList(forecastday)
@@ -857,4 +868,245 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
     }
 
+}
+
+
+@Composable
+fun ItemView(
+    currTempLow: String,
+    currTempHigh: String,
+    currDay: String,
+    weatherImageRes: Int // Replace with the actual resource ID for the weather image
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clip(RoundedCornerShape(16.dp))
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                Card(
+                    modifier = Modifier
+                        .size(48.dp, 40.dp)
+                        .padding(4.dp),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text(
+                        text = currTempLow,
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                        fontSize = 20.sp
+                    )
+                }
+
+                Card(
+                    modifier = Modifier
+                        .size(48.dp, 40.dp)
+                        .padding(4.dp),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Text(
+                        text = currTempHigh,
+                        modifier = Modifier.fillMaxSize(),
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                        fontSize = 20.sp
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = currDay,
+                    modifier = Modifier.padding(start = 8.dp),
+                    color = Color.Gray,
+                    fontSize = 18.sp
+                )
+
+                Image(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = null,
+                    modifier = Modifier.padding(start = 8.dp),
+                    contentScale = ContentScale.Fit
+                )
+
+//                AsyncImage(
+//                    model = ImageRequest.Builder(context = LocalContext.current)
+//                        .data("http:" +result.condition.icon)
+//                        .crossfade(true)
+//                        .build(),
+//                    modifier = Modifier.fillMaxWidth().height(80.dp)
+//                    ,
+//                    contentDescription = "",
+//                )
+            }
+        }
+    }
+}
+
+
+
+class Forecast2DayVH( composeView : ComposeView) : RecyclerView.ViewHolder(composeView.rootView) {
+
+    private val composeView: ComposeView = composeView
+
+    private val trimLeadingZeros : (Double) -> String = {
+        source ->
+        val format = DecimalFormat("0")
+        format.format(source)
+    }
+    fun bind(result: Forecastday) {
+        composeView.setContent {
+            CustomCard(result,trimLeadingZeros)
+        }
+    }
+
+
+}
+
+//@Preview
+//@Composable
+//fun CustomCardPreview() {
+//    val exampleResult = generateRandomForecastday()
+//
+//    // Example trimLeadingZeros function implementation
+//    val exampleTrimLeadingZeros: (Double) -> String = { source ->
+//        String.format("%.1f", source)
+//    }
+//
+//    CustomCard(result = exampleResult, trimLeadingZeros = exampleTrimLeadingZeros)
+//}
+
+@Composable
+fun CustomCard(result: Forecastday, trimLeadingZeros: (Double) -> String) {
+    // SimpleDateFormat initialization
+    val input = SimpleDateFormat("yyyy-MM-dd")
+    val output = SimpleDateFormat("EEEE")
+    val display = input.parse(result.date)
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp)
+            .padding(4.dp)
+            .padding(start = 5.dp, end = 5.dp),
+        shape = RoundedCornerShape(10.dp)
+    ) {
+        ConstraintLayout(
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            val (text, image, minTemp, maxTemp) = createRefs()
+
+            Text(
+                text = output.format(display),
+                textAlign = TextAlign.Justify,
+                modifier = Modifier
+                    .padding(top = 4.dp, bottom = 4.dp, start = 0.dp, end = 4.dp)
+                    .wrapContentWidth()
+                    .constrainAs(text) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start, margin = 8.dp)
+                        bottom.linkTo(parent.bottom)
+                    },
+                fontSize = 14.sp,
+            )
+
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data("http:" + result.day.condition.icon)
+                    .crossfade(true)
+                    .build(),
+                modifier = Modifier
+                    .padding(4.dp)
+                    .width(50.dp)
+                    .height(50.dp).constrainAs(image){
+                        start.linkTo(text.end)
+                        end.linkTo(minTemp.start)
+
+                    }
+                ,
+                contentDescription = "",
+            )
+
+            Text(
+                text = "${trimLeadingZeros(result.day.mintemp_c)}°",
+                color = androidx.compose.ui.graphics.Color.Black,
+                textAlign = TextAlign.End,
+                modifier = Modifier.padding(4.dp).constrainAs(minTemp) {
+                    top.linkTo(parent.top, margin = 4.dp)
+                    bottom.linkTo(parent.bottom, margin = 4.dp)
+                    end.linkTo(maxTemp.start, margin = 18.dp)
+                },
+                fontSize = 12.sp
+            )
+
+            Text(
+                text = "${trimLeadingZeros(result.day.maxtemp_c)}°",
+                style = MaterialTheme.typography.bodyLarge,
+                fontSize = 11.sp,
+                color = androidx.compose.ui.graphics.Color.Black,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(4.dp).constrainAs(maxTemp) {
+                    top.linkTo(parent.top, margin = 4.dp)
+                    bottom.linkTo(parent.bottom, margin = 4.dp)
+                    end.linkTo(parent.end, margin = 10.dp)
+                },
+            )
+        }
+    }
+}
+
+// Function to generate random Forecastday data for the preview
+private fun generateRandomForecastday(): Forecastday {
+    // Sample date format for date property
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+    return Forecastday(
+        astro = Astro(
+            moon_illumination = "50%",
+            moon_phase = "Waning Gibbous",
+            moonrise = "06:30 AM",
+            moonset = "07:00 PM",
+            sunrise = "05:00 AM",
+            sunset = "07:30 PM"
+        ),
+        date = dateFormat.format(System.currentTimeMillis()),
+        date_epoch = Random.nextInt(),
+        day = Day(
+            avghumidity = Random.nextDouble(0.0, 100.0),
+            avgtemp_c = Random.nextDouble(-10.0, 40.0),
+            avgtemp_f = Random.nextDouble(14.0, 104.0),
+            avgvis_km = Random.nextDouble(0.0, 100.0),
+            avgvis_miles = Random.nextDouble(0.0, 62.0),
+            condition = ConditionX(
+                code = Random.nextInt(),
+                icon = "http://sample.com/weather_icon.png",
+                text = "Partly cloudy"
+            ),
+            daily_chance_of_rain = Random.nextInt(0, 100),
+            daily_chance_of_snow = Random.nextInt(0, 100),
+            daily_will_it_rain = Random.nextInt(0, 100),
+            daily_will_it_snow = Random.nextInt(0, 100),
+            maxtemp_c = Random.nextDouble(-10.0, 40.0),
+            maxtemp_f = Random.nextDouble(14.0, 104.0),
+            maxwind_kph = Random.nextDouble(0.0, 100.0),
+            maxwind_mph = Random.nextDouble(0.0, 62.0),
+            mintemp_c = Random.nextDouble(-10.0, 40.0),
+            mintemp_f = Random.nextDouble(14.0, 104.0),
+            totalprecip_in = Random.nextDouble(0.0, 10.0),
+            totalprecip_mm = Random.nextDouble(0.0, 100.0),
+            uv = Random.nextDouble(0.0, 10.0)
+        ),
+        hour = listOf() // Add random data for the hour property as needed
+    )
 }
