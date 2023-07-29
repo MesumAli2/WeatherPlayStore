@@ -203,7 +203,7 @@
                         android:layout_below="@+id/fav_screen"
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="12dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:contentDescription="TODO"
                         android:focusable="true"
                         android:padding="12dp"
@@ -494,231 +494,229 @@
 
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
+            <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/details"
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/weatherForecast"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="2dp"
-                android:layout_marginEnd="8dp"
                 android:visibility="visible"
                 app:cardCornerRadius="18sp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
 
-                    <LinearLayout
-                        android:id="@+id/uv_humidll"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/id_condition"
-                        android:orientation="horizontal">
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/uv_humidll"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_below="@id/id_condition"-->
+<!--                        android:orientation="horizontal">-->
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="70dp">
+<!--                        <RelativeLayout-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="70dp">-->
 
-                            <TextView
-                                android:id="@+id/feelikelltem"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_above="@+id/feelikell"
-                                android:layout_centerHorizontal="true"
-                                android:layout_marginBottom="-10dp"
-                                android:text="Uv index"
-                                android:textColor="@color/black">
+<!--                            <TextView-->
+<!--                                android:id="@+id/feelikelltem"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_above="@+id/feelikell"-->
+<!--                                android:layout_centerHorizontal="true"-->
+<!--                                android:layout_marginBottom="-10dp"-->
+<!--                                android:text="Uv index"-->
+<!--                                android:textColor="@color/black">-->
 
-                            </TextView>
+<!--                            </TextView>-->
 
-                            <LinearLayout
-                                android:id="@+id/feelikell"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginStart="16dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="16dp"
-                                android:orientation="horizontal">
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/feelikell"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_alignParentBottom="true"-->
+<!--                                android:layout_marginStart="16dp"-->
+<!--                                android:layout_marginTop="16dp"-->
+<!--                                android:layout_marginEnd="16dp"-->
+<!--                                android:orientation="horizontal">-->
 
-                                <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/uv"
-                                    app:tint="@color/black" />
+<!--                                <ImageView-->
+<!--                                    android:layout_width="40dp"-->
+<!--                                    android:layout_height="40dp"-->
+<!--                                    android:src="@drawable/uv"-->
+<!--                                    app:tint="@color/black" />-->
 
-                                <TextView
-                                    android:id="@+id/uv_index"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginStart="4dp"
-                                    android:textColor="@color/black"
+<!--                                <TextView-->
+<!--                                    android:id="@+id/uv_index"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_gravity="center"-->
+<!--                                    android:layout_marginStart="4dp"-->
+<!--                                    android:textColor="@color/black"-->
 
-                                    android:textSize="20sp" />
-                            </LinearLayout>
-                        </RelativeLayout>
-
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="70dp">
-
-                            <TextView
-                                android:id="@+id/humidtext"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_above="@+id/humidll"
-                                android:layout_centerHorizontal="true"
-                                android:layout_marginBottom="-10dp"
-                                android:text="Humidity"
-                                android:textColor="@color/black">
-
-                            </TextView>
-
-                            <LinearLayout
-                                android:id="@+id/humidll"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginStart="16dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="16dp"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/humidity"
-                                    app:tint="@color/black" />
-
-                                <TextView
-                                    android:id="@+id/humidity"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginStart="4dp"
-                                    android:textColor="@color/black"
-                                    android:textSize="20sp" />
-                            </LinearLayout>
-                        </RelativeLayout>
+<!--                                    android:textSize="20sp" />-->
+<!--                            </LinearLayout>-->
+<!--                        </RelativeLayout>-->
 
 
-                    </LinearLayout>
+<!--                        <View-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="0dp"-->
+<!--                            android:layout_weight="1" />-->
 
-                    <LinearLayout
-                        android:id="@+id/feel_visibilityll"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/uv_humidll"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal">
+<!--                        <RelativeLayout-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="70dp">-->
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="70dp">
+<!--                            <TextView-->
+<!--                                android:id="@+id/humidtext"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_above="@+id/humidll"-->
+<!--                                android:layout_centerHorizontal="true"-->
+<!--                                android:layout_marginBottom="-10dp"-->
+<!--                                android:text="Humidity"-->
+<!--                                android:textColor="@color/black">-->
 
-                            <TextView
-                                android:id="@+id/feelikelltext"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_above="@+id/feelsikell"
-                                android:layout_centerHorizontal="true"
-                                android:layout_marginBottom="-10dp"
-                                android:text="Feels like"
-                                android:textColor="@color/black">
+<!--                            </TextView>-->
 
-                            </TextView>
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/humidll"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_alignParentBottom="true"-->
+<!--                                android:layout_marginStart="16dp"-->
+<!--                                android:layout_marginTop="16dp"-->
+<!--                                android:layout_marginEnd="16dp"-->
+<!--                                android:orientation="horizontal">-->
 
-                            <LinearLayout
-                                android:id="@+id/feelsikell"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginStart="16dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="16dp"
-                                android:orientation="horizontal">
+<!--                                <ImageView-->
+<!--                                    android:layout_width="40dp"-->
+<!--                                    android:layout_height="40dp"-->
+<!--                                    android:src="@drawable/humidity"-->
+<!--                                    app:tint="@color/black" />-->
 
-                                <ImageView
-                                    android:layout_width="30dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/feelslike"
-                                    app:tint="@color/black" />
-
-                                <TextView
-                                    android:id="@+id/feelikelltextview"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginStart="4dp"
-                                    android:textColor="@color/black"
-
-                                    android:textSize="20sp" />
-                            </LinearLayout>
-                        </RelativeLayout>
+<!--                                <TextView-->
+<!--                                    android:id="@+id/humidity"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_gravity="center"-->
+<!--                                    android:layout_marginStart="4dp"-->
+<!--                                    android:textColor="@color/black"-->
+<!--                                    android:textSize="20sp" />-->
+<!--                            </LinearLayout>-->
+<!--                        </RelativeLayout>-->
 
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1" />
+<!--                    </LinearLayout>-->
 
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="70dp">
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/feel_visibilityll"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_below="@id/uv_humidll"-->
+<!--                        android:layout_marginTop="16dp"-->
+<!--                        android:orientation="horizontal">-->
 
-                            <TextView
-                                android:id="@+id/visibilitytext"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_above="@+id/visibilityll"
-                                android:layout_centerHorizontal="true"
-                                android:layout_marginBottom="-10dp"
-                                android:text="Visibility"
-                                android:textColor="@color/black">
+<!--                        <RelativeLayout-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="70dp">-->
 
-                            </TextView>
+<!--                            <TextView-->
+<!--                                android:id="@+id/feelikelltext"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_above="@+id/feelsikell"-->
+<!--                                android:layout_centerHorizontal="true"-->
+<!--                                android:layout_marginBottom="-10dp"-->
+<!--                                android:text="Feels like"-->
+<!--                                android:textColor="@color/black">-->
 
-                            <LinearLayout
-                                android:id="@+id/visibilityll"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginStart="16dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="16dp"
-                                android:orientation="horizontal">
+<!--                            </TextView>-->
 
-                                <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/visibility"
-                                    app:tint="@color/black" />
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/feelsikell"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_alignParentBottom="true"-->
+<!--                                android:layout_marginStart="16dp"-->
+<!--                                android:layout_marginTop="16dp"-->
+<!--                                android:layout_marginEnd="16dp"-->
+<!--                                android:orientation="horizontal">-->
 
-                                <TextView
-                                    android:id="@+id/visibilitytextview"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginStart="4dp"
-                                    android:textColor="@color/black"
-                                    android:textSize="20sp" />
-                            </LinearLayout>
-                        </RelativeLayout>
+<!--                                <ImageView-->
+<!--                                    android:layout_width="30dp"-->
+<!--                                    android:layout_height="40dp"-->
+<!--                                    android:src="@drawable/feelslike"-->
+<!--                                    app:tint="@color/black" />-->
+
+<!--                                <TextView-->
+<!--                                    android:id="@+id/feelikelltextview"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_gravity="center"-->
+<!--                                    android:layout_marginStart="4dp"-->
+<!--                                    android:textColor="@color/black"-->
+
+<!--                                    android:textSize="20sp" />-->
+<!--                            </LinearLayout>-->
+<!--                        </RelativeLayout>-->
 
 
-                    </LinearLayout>
-                </LinearLayout>
+<!--                        <View-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="0dp"-->
+<!--                            android:layout_weight="1" />-->
 
-            </androidx.cardview.widget.CardView>
+<!--                        <RelativeLayout-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="70dp">-->
+
+<!--                            <TextView-->
+<!--                                android:id="@+id/visibilitytext"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_above="@+id/visibilityll"-->
+<!--                                android:layout_centerHorizontal="true"-->
+<!--                                android:layout_marginBottom="-10dp"-->
+<!--                                android:text="Visibility"-->
+<!--                                android:textColor="@color/black">-->
+
+<!--                            </TextView>-->
+
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/visibilityll"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_alignParentBottom="true"-->
+<!--                                android:layout_marginStart="16dp"-->
+<!--                                android:layout_marginTop="16dp"-->
+<!--                                android:layout_marginEnd="16dp"-->
+<!--                                android:orientation="horizontal">-->
+
+<!--                                <ImageView-->
+<!--                                    android:layout_width="40dp"-->
+<!--                                    android:layout_height="40dp"-->
+<!--                                    android:src="@drawable/visibility"-->
+<!--                                    app:tint="@color/black" />-->
+
+<!--                                <TextView-->
+<!--                                    android:id="@+id/visibilitytextview"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_gravity="center"-->
+<!--                                    android:layout_marginStart="4dp"-->
+<!--                                    android:textColor="@color/black"-->
+<!--                                    android:textSize="20sp" />-->
+<!--                            </LinearLayout>-->
+<!--                        </RelativeLayout>-->
+
+
+<!--                    </LinearLayout>-->
+<!--                </LinearLayout>-->
+
+            </androidx.compose.ui.platform.ComposeView>
 
 
 

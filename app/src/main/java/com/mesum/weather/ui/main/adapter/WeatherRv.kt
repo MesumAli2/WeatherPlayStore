@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
  import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -157,14 +159,15 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
                          notifyDataSetChanged()
                        return true
                     }
-                    if (item?.itemId == R.id.iv_farhentie) {
+                 else if (item?.itemId == R.id.iv_farhentie) {
                         with (sharedPref!!.edit()) {
-                            putString("tempType","Celsius")
+                            putString("tempType","Fahrenheit")
                             apply()
                             notifyDataSetChanged()
                         }
                        return false
-                    }    else{
+                    }
+                     else{
                         return false
                     }
                 }
@@ -230,13 +233,32 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
         recyclerViewAdapterforecasat.notifyDataSetChanged()
         //  weatherRvHourly.addAll(it.forecast.forecastday[0].hour)
-        binding.findViewById<TextView>(R.id.sunrise).text = it.forecast.forecastday[0].astro.sunrise.toString()
-        binding.findViewById<TextView>(R.id.sunset).text = it.forecast.forecastday[0].astro.sunset.toString()
-        binding.findViewById<TextView>(R.id.uv_index).text = "${trimLeadingZeros(it.current.uv)}"
-        binding.findViewById<TextView>(R.id.humidity).text = "${it.current.humidity}%"
-        binding.findViewById<TextView>(R.id.feelikelltextview).text = "${trimLeadingZeros(it.current.feelslike_c)}°"
+//        binding.findViewById<TextView>(R.id.sunrise).text = it.forecast.forecastday[0].astro.sunrise.toString()
+//        binding.findViewById<TextView>(R.id.sunset).text = it.forecast.forecastday[0].astro.sunset.toString()
+//        binding.findViewById<TextView>(R.id.uv_index).text = "${trimLeadingZeros(it.current.uv)}"
+//        binding.findViewById<TextView>(R.id.humidity).text = "${it.current.humidity}%"
+//        binding.findViewById<TextView>(R.id.feelikelltextview).text = "${trimLeadingZeros(it.current.feelslike_c)}°"
+//
+//        binding.findViewById<TextView>(R.id.visibilitytextview).text = "${trimLeadingZeros(it.current.vis_km)}km"
+            val sunrise = it.forecast.forecastday[0].astro.sunrise.toString()
+            val sunset = it.forecast.forecastday[0].astro.sunset.toString()
+            val uvIndex = "${trimLeadingZeros(it.current.uv)}"
+            val humidity = "${it.current.humidity}%"
+            val feelsLike = "${trimLeadingZeros(it.current.feelslike_f)}°"
+            val visibility = "${trimLeadingZeros(it.current.vis_km)}km"
+            binding.findViewById<ComposeView>(R.id.details).setContent {
+                DetailsCard(
+                    sunrise = sunrise,
+                    sunset = sunset,
+                    uvIndex = uvIndex,
+                    humidity = humidity,
+                    feelsLike = feelsLike,
+                    visibility = visibility
+                )
+            }
 
-        binding.findViewById<TextView>(R.id.visibilitytextview).text = "${trimLeadingZeros(it.current.vis_km)}km"
+
+
 
         // binding.findViewById<LinearLayout>(R.id.feelsikell).text = "${trimLeadingZeros(it.current.feelslike_c)}°"
 
@@ -257,10 +279,10 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
             override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {}
             override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
         })
-       setBackGround(it.current.is_day, binding, it.current.condition.text.toString(), it)
+        setBackGround(it.current.is_day, binding, it.current.condition.text.toString(), it)
         Log.d("WeatherResponse", it.toString())
 
-     //  setMap(it.location.lat, it.location.lon, it.current.is_day, binding)
+            //setMap(it.location.lat, it.location.lon, it.current.is_day, binding)
         binding.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(it.current.wind_kph)} kmh"
         binding.findViewById<TextView>(R.id.wind_direction).text = "${it.current.wind_dir.toString()} "
         binding.findViewById<TextView>(R.id.wind_degree).text = it.current.wind_degree.toString()
@@ -383,13 +405,7 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
             recyclerViewAdapterforecasat.notifyDataSetChanged()
             //  weatherRvHourly.addAll(it.forecast.forecastday[0].hour)
-            binding.findViewById<TextView>(R.id.sunrise).text = it.forecast.forecastday[0].astro.sunrise.toString()
-            binding.findViewById<TextView>(R.id.sunset).text = it.forecast.forecastday[0].astro.sunset.toString()
-            binding.findViewById<TextView>(R.id.uv_index).text = "${trimLeadingZeros(it.current.uv)}"
-            binding.findViewById<TextView>(R.id.humidity).text = "${it.current.humidity}%"
-            binding.findViewById<TextView>(R.id.feelikelltextview).text = "${trimLeadingZeros(it.current.feelslike_f)}°"
 
-            binding.findViewById<TextView>(R.id.visibilitytextview).text = "${trimLeadingZeros(it.current.vis_km)}km"
 
             // binding.findViewById<LinearLayout>(R.id.feelsikell).text = "${trimLeadingZeros(it.current.feelslike_c)}°"
 
@@ -1029,7 +1045,8 @@ fun CustomCard(result: Forecastday, trimLeadingZeros: (Double) -> String) {
                 modifier = Modifier
                     .padding(4.dp)
                     .width(50.dp)
-                    .height(50.dp).constrainAs(image){
+                    .height(50.dp)
+                    .constrainAs(image) {
                         start.linkTo(text.end)
                         end.linkTo(minTemp.start)
 
@@ -1042,11 +1059,13 @@ fun CustomCard(result: Forecastday, trimLeadingZeros: (Double) -> String) {
                 text = "${trimLeadingZeros(result.day.mintemp_c)}°",
                 color = androidx.compose.ui.graphics.Color.Black,
                 textAlign = TextAlign.End,
-                modifier = Modifier.padding(4.dp).constrainAs(minTemp) {
-                    top.linkTo(parent.top, margin = 4.dp)
-                    bottom.linkTo(parent.bottom, margin = 4.dp)
-                    end.linkTo(maxTemp.start, margin = 18.dp)
-                },
+                modifier = Modifier
+                    .padding(4.dp)
+                    .constrainAs(minTemp) {
+                        top.linkTo(parent.top, margin = 4.dp)
+                        bottom.linkTo(parent.bottom, margin = 4.dp)
+                        end.linkTo(maxTemp.start, margin = 18.dp)
+                    },
                 fontSize = 12.sp
             )
 
@@ -1056,11 +1075,13 @@ fun CustomCard(result: Forecastday, trimLeadingZeros: (Double) -> String) {
                 fontSize = 11.sp,
                 color = androidx.compose.ui.graphics.Color.Black,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(4.dp).constrainAs(maxTemp) {
-                    top.linkTo(parent.top, margin = 4.dp)
-                    bottom.linkTo(parent.bottom, margin = 4.dp)
-                    end.linkTo(parent.end, margin = 10.dp)
-                },
+                modifier = Modifier
+                    .padding(4.dp)
+                    .constrainAs(maxTemp) {
+                        top.linkTo(parent.top, margin = 4.dp)
+                        bottom.linkTo(parent.bottom, margin = 4.dp)
+                        end.linkTo(parent.end, margin = 10.dp)
+                    },
             )
         }
     }
@@ -1109,4 +1130,134 @@ private fun generateRandomForecastday(): Forecastday {
         ),
         hour = listOf() // Add random data for the hour property as needed
     )
+}
+
+
+@Composable
+fun DetailsCard(
+    sunrise: String,
+    sunset: String,
+    uvIndex: String,
+    humidity: String,
+    feelsLike: String,
+    visibility: String
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(start = 8.dp, top = 2.dp, end = 8.dp),
+        shape = RoundedCornerShape(18.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            UvHumidityRow(uvIndex, humidity)
+            Spacer(modifier = Modifier.height(16.dp))
+            FeelVisibilityRow(feelsLike, visibility)
+        }
+    }
+}
+
+@Composable
+fun UvHumidityRow(uvIndex: String, humidity: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        UvIndex(uvIndex)
+        Spacer(modifier = Modifier.weight(1f))
+        Humidity(humidity)
+    }
+}
+
+@Composable
+fun UvIndex(uvIndex: String) {
+    Column(
+        modifier = Modifier
+            .widthIn(0.dp, 70.dp)
+    ) {
+        Text("Uv index", color = Color.Black)
+        Row(
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.uv),
+                contentDescription = "Uv Index",
+                modifier = Modifier.size(24.dp)
+            )
+            Text(uvIndex, color = Color.Black, fontSize = 14.sp)
+        }
+    }
+}
+
+@Composable
+fun Humidity(humidity: String) {
+    Column(
+        modifier = Modifier
+            .widthIn(0.dp, 70.dp)
+    ) {
+        Text("Humidity", color = Color.Black)
+        Row(
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.humidity),
+                contentDescription = "Humidity",
+                modifier = Modifier.size(24.dp)
+            )
+            Text(humidity, color = Color.Black, fontSize = 14.sp)
+        }
+    }
+}
+
+@Composable
+fun FeelVisibilityRow(feelsLike: String, visibility: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        FeelsLike(feelsLike)
+        Spacer(modifier = Modifier.weight(1f))
+        Visibility(visibility)
+    }
+}
+
+@Composable
+fun FeelsLike(feelsLike: String) {
+    Column(
+        modifier = Modifier
+            .widthIn(0.dp, 70.dp)
+            .wrapContentHeight()
+    ) {
+        Text("Feels like", color = Color.Black)
+        Row(
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.feelslike),
+                contentDescription = "Feels Like",
+                modifier = Modifier.size(24.dp)
+            )
+            Text(feelsLike, color = Color.Black, fontSize = 14.sp)
+        }
+    }
+}
+
+@Composable
+fun Visibility(visibility: String) {
+    Column(
+        modifier = Modifier
+            .widthIn(0.dp, 70.dp)
+    ) {
+        Text("Visibility", color = Color.Black)
+        Row(
+            modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.visibility),
+                contentDescription = "Visibility",
+                modifier = Modifier.size(24.dp)
+            )
+            Text(visibility, color = Color.Black, fontSize = 14.sp)
+        }
+    }
 }
