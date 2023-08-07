@@ -38,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
  import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -283,10 +284,14 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
         Log.d("WeatherResponse", it.toString())
 
             //setMap(it.location.lat, it.location.lon, it.current.is_day, binding)
-        binding.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(it.current.wind_kph)} kmh"
-        binding.findViewById<TextView>(R.id.wind_direction).text = "${it.current.wind_dir.toString()} "
-        binding.findViewById<TextView>(R.id.wind_degree).text = it.current.wind_degree.toString()
-        binding.findViewById<TextView>(R.id.wing_gust).text = "${trimLeadingZeros(it.current.gust_kph)} kmh"
+//        binding.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(it.current.wind_kph)} kmh"
+//        binding.findViewById<TextView>(R.id.wind_direction).text = "${it.current.wind_dir.toString()} "
+//        binding.findViewById<TextView>(R.id.wind_degree).text = it.current.wind_degree.toString()
+//        binding.findViewById<TextView>(R.id.wing_gust).text = "${trimLeadingZeros(it.current.gust_kph)} kmh"
+
+            binding.findViewById<ComposeView>(R.id.cardView_rent).setContent {
+                RentCardView(it)
+            }
 
         }else{
             val recyclerViewAdapterforecasat = object : ListAdapter<Hour, WeatherFragment.RvViewHolder>(diif ){
@@ -430,10 +435,10 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
             Log.d("WeatherResponse", it.toString())
 
             //  setMap(it.location.lat, it.location.lon, it.current.is_day, binding)
-            binding.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(it.current.wind_kph)} kmh"
-            binding.findViewById<TextView>(R.id.wind_direction).text = "${it.current.wind_dir.toString()} "
-            binding.findViewById<TextView>(R.id.wind_degree).text = it.current.wind_degree.toString()
-            binding.findViewById<TextView>(R.id.wing_gust).text = "${trimLeadingZeros(it.current.gust_kph)} kmh"
+//            binding.findViewById<TextView>(R.id.wind_speed).text = "${trimLeadingZeros(it.current.wind_kph)} kmh"
+//            binding.findViewById<TextView>(R.id.wind_direction).text = "${it.current.wind_dir.toString()} "
+//            binding.findViewById<TextView>(R.id.wind_degree).text = it.current.wind_degree.toString()
+//            binding.findViewById<TextView>(R.id.wing_gust).text = "${trimLeadingZeros(it.current.gust_kph)} kmh"
         }
 
 
@@ -1260,4 +1265,122 @@ fun Visibility(visibility: String) {
             Text(visibility, color = Color.Black, fontSize = 14.sp)
         }
     }
+}
+
+
+@Composable
+fun RentCardView(forecastModel: ForecastModel) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(10.dp),
+        shape = RoundedCornerShape(16.dp)) {
+
+        Row(modifier =  Modifier.padding(10.dp)) {
+
+            Column(
+                modifier = Modifier.padding(10.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = "Wind Details",
+                    fontSize = 14.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "Wind",
+//                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = "${trimLeadingZeros(forecastModel.current.wind_kph)} KPH", // Replace with the actual data
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "Direction",
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = "${forecastModel.current.wind_dir.toString()}",
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "Degree",
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = "${forecastModel.current.wind_degree.toString()}",
+//                    fontFamily = FontFamily(Font(R.font.poppins_light)),
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Text(
+                        text = "Gust",
+//                    fontFamily = FontFamily(Font(R.font.poppins_medium)),
+                        fontSize = 16.sp,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = "${trimLeadingZeros(forecastModel.current.gust_kph)} KPH", // Replace with the actual data
+//                    fontFamily = FontFamily(Font(R.font.poppins_light)),
+                        fontSize = 14.sp,
+                        color = Color.Black
+                    )
+
+                }
+
+
+            }
+            
+
+                Image(
+                    painterResource(id = R.drawable.windturbine),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(102.dp)
+                        .align(Alignment.CenterVertically)
+                )
+
+        }
+
+    }
+
+}
+fun trimLeadingZeros(source: Double): String {
+    val price = source
+    val format = DecimalFormat("0")
+    return format.format(price)
+
 }
