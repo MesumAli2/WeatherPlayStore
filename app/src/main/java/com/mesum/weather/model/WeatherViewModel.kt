@@ -46,7 +46,7 @@ class WeatherViewModel @Inject constructor(val repository: CitysRepository) : Vi
     fun fetchResponse(city : String ){
         Log.d("weatherModel", "Network Initiated")
 
-        val weatherRp = WeatherObject.weatherRequest.getWeather(cityName = city)
+        val weatherRp = WeatherObject.weatherRequest.getWeather()
         weatherRp.enqueue(object  : Callback<ForecastModel> {
             override fun onResponse(
                 call: Call<ForecastModel>,
@@ -92,6 +92,7 @@ class WeatherViewModel @Inject constructor(val repository: CitysRepository) : Vi
 
 
     fun fetchFutureResponse(lat : Double, Long : Double) {
+
         var latLong = "${lat.toString()},${Long.toString()}"
         Log.d("weatherModel", "Network Initiated")
         viewModelScope.launch {

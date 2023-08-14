@@ -3,6 +3,7 @@ package com.mesum.weather.ui.add
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -94,14 +95,20 @@ class AddFragment : Fragment() {
         }
 
        /// binding.search.oncane
+        binding.search.onCancelPendingInputEvents()
+        binding.search.onFocusChangeListener
+    }
 
-
+    private fun showDpNow(){
+        val showvalvz = "DpValvz"
+        val popularShesBachelor = "StrStrStrStrStrStrStrStrStr"
     }
 
     private fun View.showKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
+
     private fun showInputMethod(view: View) {
         val imm: InputMethodManager? = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         if (imm != null) {

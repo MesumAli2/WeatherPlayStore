@@ -109,7 +109,7 @@ dependencies {
 
 
     def moshi_version ="1.9.3"
-    def retrofit_version = "2.9.0"
+    def retrofit_version = "1.8.0"
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"

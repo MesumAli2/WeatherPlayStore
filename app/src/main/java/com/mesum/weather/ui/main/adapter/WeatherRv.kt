@@ -226,7 +226,7 @@ val diif  =  object  : DiffUtil.ItemCallback<ForecastModel>(){
 
 
         }else{
-            weatherRvHourly.addAll(it.forecast.forecastday[1].hour)
+            weatherRvHourly.addAll(it.forecast.forecastday[0].hour)
             recyclerViewAdapterforecasat.submitList(weatherRvHourly)
 
         }

@@ -48,7 +48,7 @@ class  FavoriteViewModel @Inject constructor(val repository: FavCityRepository) 
     fun fetchResponse(city : String ){
         Log.d("weatherModel", "Network Initiated")
 
-        val weatherRp = WeatherObject.weatherRequest.getWeather(cityName = city)
+        val weatherRp = WeatherObject.weatherRequest.getWeather()
         weatherRp.enqueue(object  : Callback<ForecastModel> {
             override fun onResponse(
                 call: Call<ForecastModel>,
